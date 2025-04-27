@@ -32,7 +32,7 @@ class CustomerController extends BaseController
         $customer->suffix = $request->suffix;
         $customer->gender = $request->gender;
         $customer->is_pregnant = $request->is_pregnant ??0;
-        $customer->is_breastfeeding = $request->is_breastfeeding;
+        $customer->is_breastfeeding = $request->is_breastfeeding ??0;
         $customer->birth_date = $request->birth_date;
         $customer->email = $request->email;
         $customer->address = $request->address;
