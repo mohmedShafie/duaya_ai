@@ -185,7 +185,7 @@ class CustomerController extends BaseController
 
         $mobile = $request->mobile;
         // Handle test numbers
-        if (in_array($mobile, ['+201142995709', '+201142995708' , '+201234567890']) && $request->otp === '123456') {
+        if (in_array($mobile, ['1142995709', '1142995708' , '1234567890']) && $request->otp === '123456') {
             return $this->handleTestNumberVerification($mobile);
         }
 
