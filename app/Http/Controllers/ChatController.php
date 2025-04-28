@@ -16,7 +16,7 @@ class ChatController extends BaseController
         $messages = Message::where('session_id', $sessionId)
             ->where('customer_id', config('customer.id'))
             ->orderBy('created_at', 'desc')
-            ->orderBy('id', 'desc')
+            ->orderBy('id', 'asc')
             ->offset($offset)
             ->limit($limit)
             ->get();
