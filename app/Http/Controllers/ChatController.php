@@ -9,7 +9,7 @@ class ChatController extends BaseController
 {
     public function getChat(Request $request)
     {
-        
+
         $sessionId = $request->input('session_id');
         $offset = $request->input('offset', 0);
         $limit = $request->input('limit', 10);
@@ -19,8 +19,6 @@ class ChatController extends BaseController
             ->offset($offset)
             ->limit($limit)
             ->get();
-        $messages = $messages->reverse(); // Reverse the order to show the oldest messages first
-
         return $this->sendResponse(
             true,
             'Messages retrieved successfully',
