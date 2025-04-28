@@ -9,7 +9,7 @@ use Laravel\Sanctum\HasApiTokens;
 
 class Customer extends Authenticatable
 {
-    use HasFactory;
+    use HasFactory , HasApiTokens;
    protected $guarded = [];
 
    public function faceEncoding()
