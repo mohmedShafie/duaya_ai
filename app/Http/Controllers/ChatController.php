@@ -9,6 +9,7 @@ class ChatController extends BaseController
 {
     public function getChat(Request $request)
     {
+        
         $sessionId = $request->input('session_id');
         $offset = $request->input('offset', 0);
         $limit = $request->input('limit', 10);

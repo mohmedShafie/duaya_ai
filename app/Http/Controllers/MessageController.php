@@ -21,7 +21,7 @@ class MessageController extends BaseController
                 'customer_id' => config('customer.id'),
             ]);
         }
-        $request->merge(['session_id' => $session->id]);
+        $request->merge(['session_id' => $session->session_id]);
                      // Validate the request
                 $validator = Validator::make($request->all(), [
                     'message' => 'required|string|max:255',
@@ -52,7 +52,6 @@ class MessageController extends BaseController
                     ]);
                     if($message){
                         return response()->json([
-                            'status' => 'success',
                             'message' =>$message->message,
                             'audio_url' => asset('storage/' . $message->audio),
                         ]);
