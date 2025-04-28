@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Message extends Model
 {
     use HasFactory;
+
     protected $fillable = [
         'message',
         'audio',
@@ -15,4 +16,20 @@ class Message extends Model
         'session_id',
         'customer_id',
     ];
+
+    /**
+     * Get the session that owns this message.
+     */
+    public function session()
+    {
+        return $this->belongsTo(Session::class);
+    }
+
+    /**
+     * Get the customer that owns this message.
+     */
+    public function customer()
+    {
+        return $this->belongsTo(Customer::class);
+    }
 }
