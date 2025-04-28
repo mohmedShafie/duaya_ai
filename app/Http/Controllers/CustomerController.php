@@ -45,7 +45,10 @@ class CustomerController extends BaseController
         return $this->sendResponse(
             true,
             'Customer registered successfully',
-           ['user' => $customer],
+           [
+            'token' => $customer->createToken('auth_token')->plainTextToken,
+            'user' => $customer
+         ],
             201
         );
     }
