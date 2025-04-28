@@ -3,15 +3,25 @@
 namespace App\Http\Controllers;
 
 use App\Models\Message;
+use App\Models\Session;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 
 class MessageController extends BaseController
 {
     public function sendMessage(Request $request)
     {
+        // Check if the request is from a customer
+        if(isset($request->first_message)){
+            $session = Session::create([
+                'session_id' => Str::uuid(),
+                'customer_id' => config('customer.id'),
+            ]);
+        }
+        $request->merge(['session_id' => $session->id]);
                      // Validate the request
                 $validator = Validator::make($request->all(), [
                     'message' => 'required|string|max:255',
@@ -56,14 +66,6 @@ class MessageController extends BaseController
                         200
                     );
                 }
-
-
-
-
-                return response()->json([
-                    'status' => 'success',
-                    'message' => $request->input('message'),
-                ]);
     }
 
     public function convertTextToSpeech(Request $request)
