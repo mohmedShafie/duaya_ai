@@ -63,12 +63,19 @@ class MessageController extends BaseController
                     }
 
                 }else{
+                    $message = Message::create([
+                        'message' => $request->input('message'),
+                        'type' => 'sent',
+                        'session_id' => $request->input('session_id'),
+                        'customer_id' => config('customer.id'),
+                    ]);
                     return $this->sendResponse(
                         true,
                         'the message sended successfully',
                         [
                         'message' => $request->input('message'),
-                        'session_id' => $request->input('session_id'),
+                        'audio_url' => null,
+                        'session_id' => $message->session_id,
                     ],
                         200
                     );
