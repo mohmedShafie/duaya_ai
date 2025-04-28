@@ -50,17 +50,26 @@ class MessageController extends BaseController
                         'customer_id' => config('customer.id'),
                     ]);
                     if($message){
-                        return response()->json([
-                            'message' =>$message->message,
-                            'audio_url' => asset('storage/' . $message->audio),
-                        ]);
+                        return $this->sendResponse(
+                            true,
+                            'the message sended successfully',
+                            [
+                                'message' =>$message->message,
+                                'audio_url' => asset('storage/' . $message->audio),
+                                'session_id' => $message->session_id,
+                        ],
+                            200
+                        );
                     }
 
                 }else{
                     return $this->sendResponse(
                         true,
                         'the message sended successfully',
-                        ['message' => $request->input('message')],
+                        [
+                        'message' => $request->input('message'),
+                        'session_id' => $request->input('session_id'),
+                    ],
                         200
                     );
                 }
