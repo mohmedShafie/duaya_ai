@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\MessageController;
 use App\Http\Controllers\SessionController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -28,5 +29,5 @@ Route::post('register', [CustomerController::class, 'register']);
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('get_chat', [ChatController::class, 'getChat']);
     Route::get('get_sessions', [SessionController::class, 'getSessions']);
-    Route::post('send_message', [ChatController::class, 'sendMessage']);
+    Route::post('send_message', [MessageController::class, 'sendMessage']);
 });
