@@ -14,6 +14,7 @@ class SessionController extends BaseController
 
         $sessions = Session::where('customer_id', config('customer.id'))
             ->with('messages')
+            ->orderBy('id', 'desc')
             ->offset($offset)
             ->limit($limit)
             ->get();
