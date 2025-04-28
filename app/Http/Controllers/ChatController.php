@@ -15,7 +15,7 @@ class ChatController extends BaseController
         $limit = $request->input('limit', 10);
         $messages = Message::where('session_id', $sessionId)
             ->where('customer_id', config('customer.id'))
-            ->orderBy('created_at', 'desc')
+            //->orderBy('created_at', 'desc')
             ->orderBy('id', 'asc')
             ->offset($offset)
             ->limit($limit)
