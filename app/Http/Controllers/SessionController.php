@@ -13,9 +13,7 @@ class SessionController extends BaseController
         $limit = request()->input('limit', 10);
 
         $sessions = Session::where('customer_id', config('customer.id'))
-            ->with(['messages' => function($query) {
-                $query->orderBy('id', 'asc')->limit(1);
-            }])
+            ->with('messages')
             ->orderBy('id', 'desc')
             ->offset($offset)
             ->limit($limit)
@@ -25,7 +23,6 @@ class SessionController extends BaseController
             $firstMessage = $session->messages->first();
             $session->first_message = $firstMessage;
             unset($session->messages);
-
             return $session;
         });
 
