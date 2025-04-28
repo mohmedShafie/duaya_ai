@@ -18,10 +18,9 @@ class MessageController extends BaseController
         $session_id = null;
         if(isset($request->first_message)) {
             $session = Session::create([
-                'session_id' => Str::uuid(),
                 'customer_id' => config('customer.id'),
             ]);
-            $session_id = $session->session_id;
+            $session_id = $session->id;
         } else {
             // If it's not a first message, session_id should be provided in the request
             $session_id = $request->input('session_id');
@@ -34,7 +33,7 @@ class MessageController extends BaseController
         $validator = Validator::make($request->all(), [
             'message' => 'required|string|max:255',
             'audio' => 'nullable|file|mimes:mp3,wav',
-            'session_id' => 'required|exists:sessions,session_id',
+            'session_id' => 'required|exists:sessions,id',
         ]);
 
         if ($validator->fails()) {
