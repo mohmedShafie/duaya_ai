@@ -65,7 +65,7 @@ class MessageController extends BaseController
                     [
                         'message' => $message->message,
                         'audio_url' => asset('storage/' . $message->audio),
-                        'session_id' => $message->session_id,
+                        'session_id' => (int)$message->session_id,
                     ],
                     200
                 );
@@ -74,7 +74,7 @@ class MessageController extends BaseController
             $message = Message::create([
                 'message' => $request->input('message'),
                 'type' => 'sent',
-                'session_id' => $request->input('session_id'),
+                'session_id' => (int)$request->input('session_id'),
                 'customer_id' => config('customer.id'),
             ]);
             $message = Message::create([
@@ -90,7 +90,7 @@ class MessageController extends BaseController
                 [
                     'message' => $request->input('message').'  backend_response',
                     'audio_url' => null,
-                    'session_id' => $message->session_id,
+                    'session_id' => (int)$message->session_id,
                 ],
                 200
             );
