@@ -77,12 +77,18 @@ class MessageController extends BaseController
                 'session_id' => $request->input('session_id'),
                 'customer_id' => config('customer.id'),
             ]);
+            $message = Message::create([
+                'message' => $request->input('message').'  backend_response',
+                'type' => 'received',
+                'session_id' => $request->input('session_id'),
+                'customer_id' => config('customer.id'),
+            ]);
 
             return $this->sendResponse(
                 true,
                 'the message sent successfully',
                 [
-                    'message' => $request->input('message'),
+                    'message' => $request->input('message').'  backend_response',
                     'audio_url' => null,
                     'session_id' => $message->session_id,
                 ],
