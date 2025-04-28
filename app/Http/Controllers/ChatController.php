@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Message;
 use Illuminate\Http\Request;
 
-class ChatController extends Controller
+class ChatController extends BaseController
 {
     public function getChat(Request $request)
     {

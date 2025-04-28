@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Session;
 use Illuminate\Http\Request;
 
-class SessionController extends Controller
+class SessionController extends BaseController
 {
     public function getSessions(Request $request)
     {
@@ -16,9 +16,15 @@ class SessionController extends Controller
         ->offset($offset)
         ->limit($limit)
         ->get();
-        return response()->json([
-            'status' => 'success',
-            'sessions' => $sessions,
-        ]);
+        return $this->sendResponse(
+            true,
+            'Sessions retrieved successfully',
+            [
+                'sessions' => $sessions,
+                'offset' => $offset + $limit,
+                'limit' => $limit,
+            ],
+            200
+        );
     }
 }
