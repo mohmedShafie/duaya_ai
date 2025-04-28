@@ -16,10 +16,15 @@ class SessionController extends BaseController
         ->offset($offset)
         ->limit($limit)
         ->get();
+        $first_message = $sessions->messages->first();
+        if ($first_message) {
+            $first_message->message = $first_message->message;
+        }
         return $this->sendResponse(
             true,
             'Sessions retrieved successfully',
             [
+                'first_message' => $first_message,
                 'sessions' => $sessions,
                 'offset' => $offset + $limit,
                 'limit' => $limit,

@@ -10,8 +10,19 @@ class Session extends Model
     use HasFactory;
     protected $fillable = [
         'customer_id',
-        'session_id',
         'created_at',
         'updated_at',
     ];
+    public function customer()
+    {
+        return $this->belongsTo(Customer::class);
+    }
+    public function messages()
+    {
+        return $this->hasMany(Message::class);
+    }
+    public function chats()
+    {
+        return $this->hasMany(Chat::class);
+    }
 }
