@@ -23,5 +23,6 @@ class CustomerMiddleware
 
             return $next($request);
         }
+        return $next($request);
     }
 }
