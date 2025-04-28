@@ -26,8 +26,7 @@ class MessageController extends BaseController
                 $validator = Validator::make($request->all(), [
                     'message' => 'required|string|max:255',
                     'audio' => 'nullable|file|mimes:mp3,wav',
-                    'type' => 'required|string|in:sent,received',
-                    'session_id' => 'required|exists:sessions,id',
+                    'session_id' => 'required|exists:sessions,session_id',
                 ]);
 
                 if ($validator->fails()) {
