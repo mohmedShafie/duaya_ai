@@ -69,7 +69,7 @@ class MessageController extends BaseController
                     'the message sent successfully',
                     [
                         'message' => $message->message,
-                        'audio_url' => asset('storage/app/public/audio/' . $message->audio),
+                        'audio_url' => asset('storage/app/public/' . $message->audio),
                         'session_id' => (int)$message->session_id,
                     ],
                     200
