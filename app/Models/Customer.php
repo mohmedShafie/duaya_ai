@@ -16,4 +16,9 @@ class Customer extends Authenticatable
    {
        return $this->hasOne(FaceEncoding::class);
    }
+
+   public function vital()
+   {
+       return $this->hasMany(Vital::class);
+   }
 }

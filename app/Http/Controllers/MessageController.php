@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\CustomerDataResource;
+use App\Models\Customer;
 use App\Models\Message;
 use App\Models\Session;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
@@ -14,6 +17,7 @@ class MessageController extends BaseController
 {
     public function sendMessage(Request $request)
     {
+
         // Check if the request is from a customer
         $session_id = null;
         if(isset($request->first_message)) {
@@ -22,7 +26,6 @@ class MessageController extends BaseController
             ]);
             $session_id = $session->id;
         } else {
-            // If it's not a first message, session_id should be provided in the request
             $session_id = $request->input('session_id');
         }
 
@@ -53,18 +56,20 @@ class MessageController extends BaseController
             $message = Message::create([
                 'message' => $request->input('message'),
                 'audio' => $request->input('audio'),
-                'type' => $request->input('type', 'sent'), // Added default 'sent' type
+                'type' => $request->input('type', 'sent'),
                 'session_id' => $request->input('session_id'),
                 'customer_id' => config('customer.id'),
             ]);
 
             if($message){
+
+                $this->send_collection_to_model($request->input('session_id') , $request->input('message'));
                 return $this->sendResponse(
                     true,
                     'the message sent successfully',
                     [
                         'message' => $message->message,
-                        'audio_url' => asset('storage/' . $message->audio),
+                        'audio_url' => asset('storage/app/public/audio/' . $message->audio),
                         'session_id' => (int)$message->session_id,
                     ],
                     200
@@ -83,7 +88,10 @@ class MessageController extends BaseController
                 'session_id' => $request->input('session_id'),
                 'customer_id' => config('customer.id'),
             ]);
-
+            if ($message){
+               $collection = $this->send_collection_to_model($request->input('session_id') , $request->input('message'));
+               Log::info('collection: ' . $collection);
+            }
             return $this->sendResponse(
                 true,
                 'the message sent successfully',
@@ -156,5 +164,33 @@ class MessageController extends BaseController
                 $response->status()
             );
         }
+    }
+
+    public function send_collection_to_model($session_id, $message)
+    {
+        $customer = Customer::with(['vital' => function($query) {
+            $query->latest()->take(1);
+        }])->find(config('customer.id'));
+
+        $messages = Message::where('session_id', $session_id)
+            ->where('customer_id', config('customer.id'))
+            ->where('type', 'sent')
+            ->latest()
+            ->take(5)
+            ->get()
+            ->toArray();
+
+        $resource = new CustomerDataResource($customer, $messages, $message);
+        $responseData = $resource->toArray(request());
+
+        Log::info('Exporting customer data: ' . json_encode($responseData));
+
+//        $filename = 'customer_data_' . $session_id . '_' . time() . '.json';
+//        Storage::disk('public')->put('exports/' . $filename, json_encode($responseData, JSON_PRETTY_PRINT));
+
+        // If I want to send the data to an external API
+        // $response = Http::post('https://api-endpoint.com', $responseData);
+
+        return json_encode($responseData);
     }
 }

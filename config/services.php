@@ -35,5 +35,8 @@ return [
         'token' => env('WHYSMS_API_TOKEN'),
         'sender_id' => env('WHYSMS_SENDER_ID'),
     ],
+    'elevenlabs' => [
+        'api_key' => env('ELEVENLABS_API_KEY'),
+    ],
 
 ];
