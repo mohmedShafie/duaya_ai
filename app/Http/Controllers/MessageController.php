@@ -66,7 +66,16 @@ class MessageController extends BaseController
                 $this->send_collection_to_model($request->input('session_id') , $request->input('message'));
                 $speechResponse = $this->convertTextToSpeech($request->input('message').' محمد و عبد الرحمن ');
                 $audioUrl = $speechResponse->original['data']['audio_url'] ?? null;
+                $messageResponse = $speechResponse->original['data']['text'];
+                $audio = $speechResponse->original['data']['audio'];
 
+                 Message::create([
+                    'message' => $messageResponse,
+                    'type' => 'received',
+                    'session_id' => $request->input('session_id'),
+                    'customer_id' => config('customer.id'),
+                     'audio' => $audio
+                ]);
                 return $this->sendResponse(
                     true,
                     'the message sent successfully',
@@ -85,18 +94,23 @@ class MessageController extends BaseController
                 'session_id' => (int)$request->input('session_id'),
                 'customer_id' => config('customer.id'),
             ]);
-            $message = Message::create([
-                'message' => $request->input('message').'  backend_response',
-                'type' => 'received',
-                'session_id' => $request->input('session_id'),
-                'customer_id' => config('customer.id'),
-            ]);
+
             if ($message){
                $collection = $this->send_collection_to_model($request->input('session_id') , $request->input('message'));
                Log::info('collection: ' . $collection);
             }
             $speechResponse  = $this->convertTextToSpeech($request->input('message').' محمد و عبد الرحمن ');
             $audioUrl = $speechResponse->original['data']['audio_url'] ?? null;
+            $messageResponse = $speechResponse->original['data']['text'];
+            $audio = $speechResponse->original['data']['audio'];
+
+            Message::create([
+                'message' => $messageResponse,
+                'type' => 'received',
+                'session_id' => $request->input('session_id'),
+                'customer_id' => config('customer.id'),
+                'audio' => $audio
+            ]);
             return $this->sendResponse(
                 true,
                 'the message sent successfully',
@@ -146,8 +160,9 @@ class MessageController extends BaseController
                 true,
                 'Text to speech conversion successful',
                 [
-                    'audio_url' => asset('public/storage/' . $filename),
+                    'audio_url' => asset('public/storage/audio/' . $filename),
                     'text' => $text,
+                    'audio' => 'audio/' . $filename,
                 ],
                 200
             );
