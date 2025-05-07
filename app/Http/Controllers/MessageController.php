@@ -80,7 +80,7 @@ class MessageController extends BaseController
                     true,
                     'the message sent successfully',
                     [
-                        'message' => $request->input('message').'  backend_response',
+                        'message' => $messageResponse,
                         'audio_url' => $audioUrl,
                         'session_id' => (int)$message->session_id,
                     ],
@@ -115,7 +115,7 @@ class MessageController extends BaseController
                 true,
                 'the message sent successfully',
                 [
-                    'message' => $request->input('message').'  backend_response',
+                    'message' => $messageResponse,
                     'audio_url' => $audioUrl,
                     'session_id' => (int)$message->session_id,
                 ],
