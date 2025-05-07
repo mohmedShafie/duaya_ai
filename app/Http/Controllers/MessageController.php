@@ -34,7 +34,7 @@ class MessageController extends BaseController
 
         // Validate the request
         $validator = Validator::make($request->all(), [
-            'message' => 'required|string|max:255',
+            'message' => 'required|string',
             'audio' => 'nullable|file|mimes:mp3,wav',
             'session_id' => 'required|exists:sessions,id',
         ]);
@@ -64,12 +64,15 @@ class MessageController extends BaseController
             if($message){
 
                 $this->send_collection_to_model($request->input('session_id') , $request->input('message'));
+                $speechResponse = $this->convertTextToSpeech($request->input('message').' محمد و عبد الرحمن ');
+                $audioUrl = $speechResponse->original['data']['audio_url'] ?? null;
+
                 return $this->sendResponse(
                     true,
                     'the message sent successfully',
                     [
-                        'message' => $message->message,
-                        'audio_url' => asset('public/storage/' . $message->audio),
+                        'message' => $request->input('message').'  backend_response',
+                        'audio_url' => $audioUrl,
                         'session_id' => (int)$message->session_id,
                     ],
                     200
@@ -92,12 +95,14 @@ class MessageController extends BaseController
                $collection = $this->send_collection_to_model($request->input('session_id') , $request->input('message'));
                Log::info('collection: ' . $collection);
             }
+            $speechResponse  = $this->convertTextToSpeech($request->input('message').' محمد و عبد الرحمن ');
+            $audioUrl = $speechResponse->original['data']['audio_url'] ?? null;
             return $this->sendResponse(
                 true,
                 'the message sent successfully',
                 [
                     'message' => $request->input('message').'  backend_response',
-                    'audio_url' => null,
+                    'audio_url' => $audioUrl,
                     'session_id' => (int)$message->session_id,
                 ],
                 200
@@ -113,17 +118,8 @@ class MessageController extends BaseController
         );
     }
 
-    public function convertTextToSpeech(Request $request)
+    public function convertTextToSpeech($text, $voiceId = 'JBFqnCBsd6RMkjVDRZzb', $modelId = 'eleven_multilingual_v2')
     {
-        // Validate the request
-        $request->validate([
-            'text' => 'required|string',
-            'voice_id' => 'required|string',
-        ]);
-
-        $text = $request->input('text');
-        $voiceId = $request->input('voice_id', 'JBFqnCBsd6RMkjVDRZzb'); // Default voice ID
-        $modelId = $request->input('model_id', 'eleven_multilingual_v2'); // Default model ID
 
         // Make API request to ElevenLabs
         $response = Http::withHeaders([
@@ -150,7 +146,7 @@ class MessageController extends BaseController
                 true,
                 'Text to speech conversion successful',
                 [
-                    'audio_url' => asset('storage/audio/' . $filename),
+                    'audio_url' => asset('public/storage/' . $filename),
                     'text' => $text,
                 ],
                 200
