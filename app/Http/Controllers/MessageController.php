@@ -99,18 +99,20 @@ class MessageController extends BaseController
                $collection = $this->send_collection_to_model($request->input('session_id') , $request->input('message'));
                Log::info('collection: ' . $collection);
             }
-            $speechResponse  = $this->convertTextToSpeech($request->input('message').' محمد و عبد الرحمن ');
-            $audioUrl = $speechResponse->original['data']['audio_url'] ?? null;
-            $messageResponse = $speechResponse->original['data']['text'];
-            $audio = $speechResponse->original['data']['audio'];
-
-            Message::create([
-                'message' => $messageResponse,
-                'type' => 'received',
-                'session_id' => $request->input('session_id'),
-                'customer_id' => config('customer.id'),
-                'audio' => $audio
-            ]);
+            $messageResponse = $request->input('message');
+            $audioUrl = null;
+//            $speechResponse  = $this->convertTextToSpeech($request->input('message').' محمد و عبد الرحمن ');
+//            $audioUrl = $speechResponse->original['data']['audio_url'] ?? null;
+//            $messageResponse = $speechResponse->original['data']['text'];
+//            $audio = $speechResponse->original['data']['audio'];
+//
+//            Message::create([
+//                'message' => $messageResponse,
+//                'type' => 'received',
+//                'session_id' => $request->input('session_id'),
+//                'customer_id' => config('customer.id'),
+//                'audio' => $audio
+//            ]);
             return $this->sendResponse(
                 true,
                 'the message sent successfully',
