@@ -29,7 +29,7 @@ class CustomerController extends BaseController
         $customer = new Customer();
         $customer->phone = $request->phone;
         $customer->full_name = $request->full_name;
-        $customer->suffix = $request->suffix;
+        $customer->suffix = $request->code;
         $customer->gender = $request->gender;
         $customer->is_pregnant = $request->is_pregnant ??0;
         $customer->is_breastfeeding = $request->is_breastfeeding ??0;
@@ -55,7 +55,8 @@ class CustomerController extends BaseController
     public function sendOTP(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'mobile' => 'required|string'
+            'mobile' => 'required|string',
+            'code' => 'required|string',
         ]);
 
         if ($validator->fails()) {
@@ -67,11 +68,11 @@ class CustomerController extends BaseController
             );
         }
 
-        $mobile =  '+20'.$request->mobile;
+        $mobile =  $request->mobile;
         $existCustomer = Customer::where('phone' , $mobile)->first();
 
         // Handle test numbers
-        if (in_array($mobile, ['+201142995709', '+201142995708' ,'+201234567890'])) {
+        if (in_array($mobile, ['1142995709', '1142995708' ,'1234567890'])) {
             return $this->sendResponse(
                 true,
                 'OTP sent successfully',
@@ -93,7 +94,7 @@ class CustomerController extends BaseController
             ], now()->addMinutes(1));
 
             // Send SMS using WhySMS
-            $response = $this->sendWhySmsMessage($mobile, $otp , $request->country_code);
+            $response = $this->sendWhySmsMessage($mobile, $otp , $request->code);
 
             if (!$response['success']) {
                 return $this->sendResponse(
