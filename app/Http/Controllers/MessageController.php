@@ -48,14 +48,14 @@ class MessageController extends BaseController
             );
         }
 
-        if($request->hasFile('audio')) {
-            $audio = $request->file('audio');
-            $filename = time() . '_' . $audio->getClientOriginalName();
-            Storage::disk('public')->put('audio/' . $filename, file_get_contents($audio));
-            $request->merge(['audio' => 'audio/' . $filename]);
+        if($request->is_audio ==1) {
+//            $audio = $request->file('audio');
+//            $filename = time() . '_' . $audio->getClientOriginalName();
+//            Storage::disk('public')->put('audio/' . $filename, file_get_contents($audio));
+//            $request->merge(['audio' => 'audio/' . $filename]);
             $message = Message::create([
                 'message' => $request->input('message'),
-                'audio' => $request->input('audio'),
+                //'audio' => $request->input('audio'),
                 'type' => $request->input('type', 'sent'),
                 'session_id' => $request->input('session_id'),
                 'customer_id' => config('customer.id'),
