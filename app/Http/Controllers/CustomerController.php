@@ -288,7 +288,7 @@ class CustomerController extends BaseController
     {
         $Customer = Customer::where('phone', 'LIKE','%'.$mobile)->first();
 
-        if ($Customer) {
+        if (!$Customer) {
             return $this->sendResponse(
                 true,
                 'OTP verified successfully',
